@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Collaboration Hub</title>
+
+  <style>
+    :root {
+      --bg: #0b1220;
+      --card: #111a2e;
+      --accent: #4dd4ff;
+      --text: #e6edf3;
+      --muted: #9fb0c3;
+      --border: #1d2a44;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      padding: 70px 20px;
+      text-align: center;
+      background: linear-gradient(135deg, #0f1b33, #0b1220);
+      border-bottom: 1px solid var(--border);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 44px;
+      color: var(--accent);
+    }
+
+    header p {
+      color: var(--muted);
+      max-width: 800px;
+      margin: 15px auto 0;
+      font-size: 18px;
+    }
+
+    .cta {
+      margin-top: 20px;
+      display: inline-block;
+      padding: 12px 18px;
+      border: 1px solid var(--accent);
+      border-radius: 10px;
+      color: var(--accent);
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    .cta:hover {
+      background: var(--accent);
+      color: #000;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: auto;
+      padding: 30px 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background: var(--card);
+      padding: 18px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      transition: 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+    }
+
+    .repo-name {
+      font-size: 18px;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .repo-desc {
+      font-size: 14px;
+      color: var(--muted);
+      min-height: 40px;
+    }
+
+    .repo-meta {
+      font-size: 12px;
+      color: #7aa2c7;
+      margin-top: 10px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>🤝 Collaboration Hub</h1>
+  <p>
+    Willkommen! Hier findest du alle meine Projekte.  
+    Ich suche aktiv nach Collaborators, Entwicklern und kreativen Ideen.
+  </p>
+
+  <a class="cta" href="mailto:auron-team@proton.me">
+    🚀 Jetzt mitarbeiten
+  </a>
+</header>
+
+<main>
+
+  <h2 style="color:#4dd4ff;">📦 Meine Repositories</h2>
+  <p style="color:#9fb0c3;">
+    Alle öffentlichen Projekte werden automatisch von GitHub geladen.
+  </p>
+
+  <div class="grid" id="repoGrid"></div>
+
+</main>
+
+<footer>
+  © Collaboration Hub • Open Source • Built for contributors
+</footer>
+
+<script>
+  const username = "LordLOLQDH";
+
+  async function loadRepos() {
+    const res = await fetch(`https://api.github.com/users/${username}/repos?sort=updated`);
+    const repos = await res.json();
+
+    const grid = document.getElementById("repoGrid");
+
+    repos.forEach(repo => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      card.innerHTML = `
+        <div class="repo-name">${repo.name}</div>
+        <div class="repo-desc">${repo.description || "Keine Beschreibung vorhanden"}</div>
+        <div class="repo-meta">
+          ⭐ ${repo.stargazers_count} • 🍴 ${repo.forks_count}
+        </div>
+      `;
+
+      card.onclick = () => window.open(repo.html_url, "_blank");
+
+      grid.appendChild(card);
+    });
+  }
+
+  loadRepos();
+</script>
+
+</body>
+</html>
